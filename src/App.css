@@ -1,0 +1,12 @@
+body {
+  background-color: #f1efec;
+  height: 100vh;
+}
+
+.MuiDataGrid-cell:focus {
+  outline: none;
+}
+.css-1peeo22-MuiFormLabel-root-MuiInputLabel-root,
+.css-ximjwn-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
+  top: -6px !important;
+}
