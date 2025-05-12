@@ -1,6 +1,7 @@
 body {
   background-color: #f1efec;
   height: 100vh;
+  /* user-select: none; */
 }
 
 .MuiDataGrid-cell:focus {

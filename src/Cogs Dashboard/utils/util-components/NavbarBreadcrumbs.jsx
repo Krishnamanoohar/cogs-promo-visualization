@@ -30,7 +30,6 @@ export default function NavbarBreadcrumbs({
           <Typography
             key={itemIndex}
             onClick={() => {
-              console.log("Clc");
               setDrillDownLevel(itemIndex);
             }}
             sx={{

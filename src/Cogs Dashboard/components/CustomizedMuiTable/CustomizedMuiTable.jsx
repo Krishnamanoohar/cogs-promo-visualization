@@ -10,6 +10,7 @@ const CustomizedMuiTable = ({
   rowsLength,
   skuFilter,
   searchText,
+  rowSelectionModel,
 }) => {
   const [filteredRows, setFilteredRows] = useState([]);
 
@@ -19,12 +20,10 @@ const CustomizedMuiTable = ({
 
     if (min) {
       filtered = filtered.filter((row) => row?.BAU_SKUcount >= min);
-      console.log("filtered", filtered);
     }
 
     if (max) {
       filtered = filtered.filter((row) => row?.BAU_SKUcount <= max);
-      console.log("filtered", filtered);
     }
 
     if (rowsLength) {
@@ -51,20 +50,32 @@ const CustomizedMuiTable = ({
       getRowId={(row) => row._id}
       sortModel={dataGridSortModel}
       disableColumnSorting
+      // rowSelectionModel={rowSelectionModel}
+      showToolbar
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
       }
       initialState={{
-        pagination: { paginationModel: { pageSize: 22 } },
+        pagination: { paginationModel: { pageSize: 20 } },
       }}
       pageSizeOptions={[10, 20, 50]}
       density="compact"
       sx={{
+        "& .MuiDataGrid": {
+          marginBottom: "1rem",
+        },
         "& .MuiDataGrid-cell:focus": {
           outline: "none",
         },
         "& .MuiDataGrid-row": {
           cursor: "pointer",
+        },
+        ".MuiDataGrid-row.Mui-selected": {
+          color: "white",
+          backgroundColor: "rgba(25, 118, 210, 0.8)", // light blue
+        },
+        "& .MuiDataGrid-row.Mui-selected:hover": {
+          backgroundColor: "rgba(25, 118, 210, 0.9)",
         },
       }}
       slotProps={{

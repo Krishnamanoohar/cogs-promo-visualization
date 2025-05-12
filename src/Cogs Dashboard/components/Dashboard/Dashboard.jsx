@@ -1,11 +1,20 @@
 import {
+  AppBar,
   Box,
+  Button,
   CssBaseline,
+  Dialog,
+  Divider,
   Grid,
   Grow,
+  IconButton,
+  ListItemButton,
+  ListItemText,
   Paper,
+  Slide,
   Stack,
   styled,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { useColorScheme } from "@mui/material/styles";
@@ -19,6 +28,9 @@ import { treeViewCustomizations } from "../../themes/theme/customizations/treeVi
 import CustomizedMuiTable from "../CustomizedMuiTable/CustomizedMuiTable.jsx";
 import DashboardGraphs from "../Graphs/DashboardGraphs.jsx";
 import Header from "../../utils/util-components/Header.jsx";
+import { List } from "echarts";
+import CloseIcon from "@mui/icons-material/Close";
+import styles from "./Dashboard.module.css";
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -35,13 +47,26 @@ const TitleContainer = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }));
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+  const { sx, ...otherProps } = props;
+  return <Slide direction="left" ref={ref} {...props} sx={sx} />;
+});
+
 const Dashboard = () => {
   const { mode, setMode, systemMode } = useColorScheme();
 
   const l1Columns = [
-    { field: "category", headerName: "Category", width: 150 },
+    {
+      field: "category",
+      headerName: "Category",
+      width: 250,
+    },
 
-    { field: "BAU_SKUcount", headerName: "BAU SKU Count", width: 150 },
+    {
+      field: "BAU_SKUcount",
+      headerName: "BAU SKU Count",
+      width: 150,
+    },
     { field: "BAU_shipment(EU)", headerName: "BAU Shipment (EU)", width: 180 },
     {
       field: "BAU_NetValue(GBP)",
@@ -92,6 +117,15 @@ const Dashboard = () => {
     max: "",
   });
 
+  //
+  const [brandRowData, setBrandRowData] = useState([]);
+  const [brandColumnData, setBrandColumnData] = useState([]);
+  const [categoryColumnData, setCategoryColumnData] = useState([]);
+  const [categoryRowData, setCategoryRowData] = useState([]);
+  const [rowSelectionModel1, setRowSelectionModel1] = useState([]);
+  const [rowSelectionModel2, setRowSelectionModel2] = useState([]);
+  const [rowSelectionModel3, setRowSelectionModel3] = useState([]);
+  //
   const onChangeSearchText = (e) => {
     setSearchText(e.target.value);
   };
@@ -111,8 +145,6 @@ const Dashboard = () => {
   };
 
   const handleRowClick = async (row) => {
-    console.log(row);
-    console.log(drillDownLevel);
     if (drillDownLevel === 0) {
       // Clicked on Category
       const category = row.row.category;
@@ -120,6 +152,7 @@ const Dashboard = () => {
       setBreadCrumbs((prev) => [...prev, category]);
       setDrillDownLevel(1);
       await fetchByCategory(category);
+      setOpen(true);
     } else if (drillDownLevel === 1) {
       // Clicked on Brand inside Category
       const brand = row.row.brand;
@@ -127,6 +160,7 @@ const Dashboard = () => {
       setBreadCrumbs((prev) => [...prev, brand]);
       setDrillDownLevel(2);
       await fetchByBrand(brand, selectedCategory);
+      setBrandDialogOpen(true);
     }
   };
 
@@ -187,6 +221,43 @@ const Dashboard = () => {
     }
   };
 
+  // const fetchCogsData = async () => {
+  //   try {
+  //     await getKeyClockToken();
+  //     const resp = await axios.get(
+  //       `${import.meta.env.VITE_GENERIC_API}/features/COGS/l1`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${sessionStorage.getItem("cogs-token")}`,
+  //         },
+  //       }
+  //     );
+
+  //     let rawData = resp.data.primary;
+
+  //     let dataColumns = [];
+  //     Object.keys(rawData[0]).map((keyName, keyIndex) => {
+  //       if (keyName !== "_id" && keyName !== "id") {
+  //         dataColumns.push({
+  //           field: keyName,
+  //           headerName: beautifyKey(keyName),
+  //           width: beautifyKey(keyName).length * 10 + 30,
+  //         });
+  //       }
+  //     });
+
+  //     const rows = rawData.map((row) => ({
+  //       id: row._id,
+  //       ...row,
+  //     }));
+
+  //     setCurrentColumnData(dataColumns);
+  //     setCurrentTableRowData(rows);
+  //     setStaticGraphData(rows);
+  //   } catch (error) {
+  //     console.log("error in fetching cogs data", error);
+  //   }
+  // };
   const fetchCogsData = async () => {
     try {
       await getKeyClockToken();
@@ -200,18 +271,49 @@ const Dashboard = () => {
       );
 
       let rawData = resp.data.primary;
+      const numberFormat = new Intl.NumberFormat("en-UK");
 
-      let dataColumns = [];
-      Object.keys(rawData[0]).map((keyName, keyIndex) => {
-        if (keyName !== "_id" && keyName !== "id") {
-          dataColumns.push({
-            field: keyName,
-            headerName: beautifyKey(keyName),
-            width: beautifyKey(keyName).length * 10 + 30,
-          });
-        }
-      });
+      // Dynamically build columns
+      const dataColumns = Object.keys(rawData[0])
+        .filter((key) => key !== "_id" && key !== "id")
+        .map((key) => {
+          return {
+            field: key,
+            headerName: beautifyKey(key),
+            width: beautifyKey(key).length * 10 + 80,
 
+            // Format values nicely
+            renderCell: (params) => {
+              const rawValue = params.value;
+
+              if (typeof rawValue === "number") {
+                return numberFormat.format(rawValue);
+              }
+
+              if (typeof rawValue === "string" && /^[£\d,]+$/.test(rawValue)) {
+                const numeric = parseFloat(rawValue.replace(/[£,]/g, ""));
+                return `£${numberFormat.format(numeric)}`;
+              }
+
+              return rawValue ?? "N/A";
+            },
+
+            // Use numeric value for sorting
+            sortComparator: (v1, v2) => {
+              const num1 =
+                typeof v1 === "string"
+                  ? parseFloat(v1.replace(/[£,]/g, ""))
+                  : v1;
+              const num2 =
+                typeof v2 === "string"
+                  ? parseFloat(v2.replace(/[£,]/g, ""))
+                  : v2;
+              return num1 - num2;
+            },
+          };
+        });
+
+      // Rows: ensure `id` is set
       const rows = rawData.map((row) => ({
         id: row._id,
         ...row,
@@ -226,7 +328,6 @@ const Dashboard = () => {
   };
 
   const fetchByCategory = async (category) => {
-    console.log("category", category);
     try {
       const resp = await axios.get(
         `${
@@ -239,9 +340,8 @@ const Dashboard = () => {
         }
       );
 
-      console.log("category resp", resp);
-
       const rawData = resp.data.primary;
+      const numberFormat = new Intl.NumberFormat("en-UK");
       if (rawData.length > 0) {
         let columns = [];
         Object.keys(rawData[0]).map((keyName, keyIndex) => {
@@ -252,19 +352,53 @@ const Dashboard = () => {
               width:
                 keyName === "brand"
                   ? 200
+                  : keyName === "rank"
+                  ? 60
                   : beautifyKey(keyName).length * 10 + 120,
+              renderCell: (params) => {
+                const rawValue = params.value;
+
+                if (typeof rawValue === "number") {
+                  return numberFormat.format(rawValue);
+                }
+
+                if (
+                  typeof rawValue === "string" &&
+                  /^[£\d,]+$/.test(rawValue)
+                ) {
+                  const numeric = parseFloat(rawValue.replace(/[£,]/g, ""));
+                  return `£${numberFormat.format(numeric)}`;
+                }
+
+                return rawValue ?? "N/A";
+              },
+
+              // Use numeric value for sorting
+              sortComparator: (v1, v2) => {
+                const num1 =
+                  typeof v1 === "string"
+                    ? parseFloat(v1.replace(/[£,]/g, ""))
+                    : v1;
+                const num2 =
+                  typeof v2 === "string"
+                    ? parseFloat(v2.replace(/[£,]/g, ""))
+                    : v2;
+                return num1 - num2;
+              },
             });
           }
         });
 
-        const rows = rawData.map((row) => ({
-          id: row._id,
-          ...row,
-        }));
+        const rows = rawData.map((row) => ({ id: row._id, ...row }));
 
-        setCurrentColumnData(columns);
-        setCurrentTableRowData(rows);
+        // setCurrentColumnData(columns);
+        // setCurrentTableRowData(rows);
+        // if (drillDownLevel === 1) {
+        setCategoryColumnData(columns);
+        setCategoryRowData(rows);
+        // }
       } else {
+        setCategoryRowData([]);
         setCurrentTableRowData([]);
       }
     } catch (error) {
@@ -287,7 +421,7 @@ const Dashboard = () => {
       );
 
       const rawData = resp.data.primary;
-
+      const numberFormat = new Intl.NumberFormat("en-UK");
       if (rawData.length > 0) {
         let columns = [];
         Object.keys(rawData[0]).map((keyName, keyIndex) => {
@@ -298,7 +432,40 @@ const Dashboard = () => {
               width:
                 keyName === "brand"
                   ? 200
+                  : keyName === "rank"
+                  ? 60
                   : beautifyKey(keyName).length * 10 + 150,
+
+              renderCell: (params) => {
+                const rawValue = params.value;
+
+                if (typeof rawValue === "number") {
+                  return numberFormat.format(rawValue);
+                }
+
+                if (
+                  typeof rawValue === "string" &&
+                  /^[£\d,]+$/.test(rawValue)
+                ) {
+                  const numeric = parseFloat(rawValue.replace(/[£,]/g, ""));
+                  return `£${numberFormat.format(numeric)}`;
+                }
+
+                return rawValue ?? "N/A";
+              },
+
+              // Use numeric value for sorting
+              sortComparator: (v1, v2) => {
+                const num1 =
+                  typeof v1 === "string"
+                    ? parseFloat(v1.replace(/[£,]/g, ""))
+                    : v1;
+                const num2 =
+                  typeof v2 === "string"
+                    ? parseFloat(v2.replace(/[£,]/g, ""))
+                    : v2;
+                return num1 - num2;
+              },
             });
           }
         });
@@ -307,10 +474,14 @@ const Dashboard = () => {
           id: row._id,
           ...row,
         }));
-
-        setCurrentColumnData(columns);
-        setCurrentTableRowData(rows);
+        // if (drillDownLevel === 2) {
+        setBrandColumnData(columns);
+        setBrandRowData(rows);
+        // }
+        // setCurrentColumnData(columns);
+        // setCurrentTableRowData(rows);
       } else {
+        setBrandRowData([]);
         setCurrentTableRowData([]);
       }
     } catch (error) {
@@ -318,6 +489,24 @@ const Dashboard = () => {
     }
   };
 
+  //
+  const [open, setOpen] = React.useState(false);
+  const [brandDialogOpen, setBrandDialogOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setDrillDownLevel(drillDownLevel - 1);
+  };
+
+  const handleCloseBrandDialog = () => {
+    setBrandDialogOpen(false);
+    setDrillDownLevel(drillDownLevel - 1);
+  };
+  //
   useEffect(() => {
     fetchCogsData();
   }, []);
@@ -341,32 +530,23 @@ const Dashboard = () => {
   return (
     <AppTheme themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
-
       <Box sx={{ display: "flex" }}>
         <SideMenu />
         <Box sx={{ flexGrow: 1, overflow: "auto", m: 1, p: 1 }}>
           <Stack spacing={2}>
-            <TitleContainer>
-              <Typography
-                variant="h3"
-                component="h1"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: "2.5rem",
-                  color: "primary.main",
-                  textTransform: "uppercase",
-                  letterSpacing: 1.2,
-                  mr: 2,
-                }}
-              >
+            <TitleContainer sx={{ display: "flex" }}>
+              <Typography variant="h3" className={styles.title}>
                 F22 Baseline Analysis
               </Typography>
             </TitleContainer>
 
             {/* Main Content */}
             <Grid container component="main" spacing={2}>
-              <Grid item size={12}>
-                <DashboardGraphs currentTableRowData={staticGraphData} />
+              <Grid size={12}>
+                <DashboardGraphs
+                  currentTableRowData={staticGraphData}
+                  drillDownLevel={0}
+                />
               </Grid>
               <Paper elevation={4} sx={{ p: 1, width: "100%" }}>
                 <Header
@@ -394,12 +574,159 @@ const Dashboard = () => {
                     rowsLength={rowsLength}
                     skuFilter={skuFilter}
                     searchText={searchText}
+                    rowSelectionModel={[1]}
                   />
                 </Paper>
               </Grid>
             </Grid>
           </Stack>
         </Box>
+
+        <Dialog
+          fullScreen
+          open={open}
+          onClose={handleClose}
+          TransitionComponent={Transition}
+          TransitionProps={{ sx: { width: "81%", justifySelf: "right" } }}
+          hideBackdrop
+        >
+          <AppBar
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              position: "sticky",
+              top: 0,
+              backgroundColor: "rgb(43, 46, 74)",
+            }}
+          >
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleClose}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+            <Typography sx={{ fontSize: "2rem", fontWeight: "700" }}>
+              Scotch - LTO SKU Analysis Dashboard
+            </Typography>
+          </AppBar>
+
+          <Grid
+            item
+            size={12}
+            sx={{ p: 1, display: "flex", flexDirection: "column", gap: "1rem" }}
+          >
+            <DashboardGraphs
+              currentTableRowData={categoryRowData}
+              drillDownLevel={1}
+            />
+            <Paper elevation={4} sx={{ p: 1, width: "100%" }}>
+              <Header
+                dataGridSortModel={dataGridSortModel}
+                toggleSort={toggleSort}
+                breadCrumbs={breadCrumbs}
+                drillDownLevel={drillDownLevel}
+                setDrillDownLevel={setDrillDownLevel}
+                setDataGridSortModel={setDataGridSortModel}
+                setCurrentTableRowData={setCurrentTableRowData}
+                currentTableRowData={currentTableRowData}
+                setRowsLength={setRowsLength}
+                skuFilter={skuFilter}
+                setSkuFilter={setSkuFilter}
+                onChangeSearchText={onChangeSearchText}
+              />
+            </Paper>
+            <Paper elevation={4}>
+              <CustomizedMuiTable
+                dataGridSortModel={dataGridSortModel}
+                rowData={categoryRowData}
+                columnData={categoryColumnData}
+                handleRowClick={handleRowClick}
+                rowsLength={rowsLength}
+                skuFilter={skuFilter}
+                searchText={searchText}
+                rowSelectionModel={rowSelectionModel2}
+              />
+            </Paper>
+          </Grid>
+        </Dialog>
+        {/* Brand Dialog */}
+        <Dialog
+          fullScreen
+          open={brandDialogOpen}
+          onClose={handleCloseBrandDialog}
+          TransitionComponent={Transition}
+          TransitionProps={{ sx: { width: "65%", justifySelf: "right" } }}
+          hideBackdrop
+        >
+          <AppBar
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              position: "sticky",
+              top: 0,
+              backgroundColor: "rgb(43, 46, 74)",
+            }}
+          >
+            <Toolbar>
+              <IconButton
+                edge="start"
+                color="inherit"
+                onClick={handleCloseBrandDialog}
+                aria-label="close"
+              >
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+            <Typography sx={{ fontSize: "2rem", fontWeight: "700" }}>
+              Johnie Walker - LTO SKU Analysis Dashboard
+            </Typography>
+          </AppBar>
+
+          <Grid
+            item
+            size={12}
+            sx={{ p: 1, display: "flex", flexDirection: "column", gap: "1rem" }}
+          >
+            <DashboardGraphs
+              currentTableRowData={brandRowData}
+              drillDownLevel={2}
+            />
+            <Paper elevation={4} sx={{ p: 1, width: "100%" }}>
+              <Header
+                dataGridSortModel={dataGridSortModel}
+                toggleSort={toggleSort}
+                breadCrumbs={breadCrumbs}
+                drillDownLevel={drillDownLevel}
+                setDrillDownLevel={setDrillDownLevel}
+                setDataGridSortModel={setDataGridSortModel}
+                setCurrentTableRowData={setCurrentTableRowData}
+                currentTableRowData={currentTableRowData}
+                setRowsLength={setRowsLength}
+                skuFilter={skuFilter}
+                setSkuFilter={setSkuFilter}
+                onChangeSearchText={onChangeSearchText}
+              />
+            </Paper>
+            <Paper elevation={4}>
+              <CustomizedMuiTable
+                dataGridSortModel={dataGridSortModel}
+                rowData={brandRowData}
+                columnData={brandColumnData}
+                handleRowClick={handleRowClick}
+                rowsLength={rowsLength}
+                skuFilter={skuFilter}
+                searchText={searchText}
+                rowSelectionModel={rowSelectionModel3}
+              />
+            </Paper>
+          </Grid>
+        </Dialog>
       </Box>
     </AppTheme>
   );

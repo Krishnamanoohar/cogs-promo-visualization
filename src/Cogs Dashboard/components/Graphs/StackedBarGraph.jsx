@@ -1,6 +1,7 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 import { Paper, Box, Typography } from "@mui/material";
+import GraphTitle from "../../utils/GraphTitle";
 
 const StackedBarGraph = ({ data }) => {
   // Aggregate total SKU and LTO SKU
@@ -16,7 +17,7 @@ const StackedBarGraph = ({ data }) => {
 
   const option = {
     title: {
-      text: "LTO vs BAU SKU Production",
+      // text: "LTO vs BAU SKU Production",
       left: "center",
     },
     tooltip: {
@@ -57,8 +58,9 @@ const StackedBarGraph = ({ data }) => {
   };
 
   return (
-    <Paper sx={{ p: 2, minWidth: "100%" }}>
-      <ReactECharts option={option} style={{ height: 250, width: "100%" }} />
+    <Paper sx={{ minWidth: "100%" }}>
+      <GraphTitle title={"LTO vs BAU SKU Production"} />
+      <ReactECharts option={option} style={{ height: 200, width: "100%" }} />
       <Typography
         variant="caption"
         display="block"

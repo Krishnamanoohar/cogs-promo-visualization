@@ -45,7 +45,6 @@ export default function Header({
 
   const handleTopNsvChange = (e) => {
     const topN = Number(e.target.value);
-    console.log(topN);
 
     setDataGridSortModel([{ field: "sumOf GBP NSV", sort: "desc" }]);
     setRowsLength(topN);
@@ -70,10 +69,10 @@ export default function Header({
         setDrillDownLevel={setDrillDownLevel}
       />
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search
+        {/* <Search
           searchText={searchText}
           onChangeSearchText={onChangeSearchText}
-        />
+        /> */}
         {drillDownLevel === 0 && (
           <Stack direction="row" spacing={2}>
             <TextField

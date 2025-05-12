@@ -1,6 +1,7 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 import { Paper } from "@mui/material";
+import GraphTitle from "../../utils/GraphTitle";
 
 const MultipleBarGraph = ({ data }) => {
   const categories = data?.map((item) => item.category);
@@ -11,7 +12,7 @@ const MultipleBarGraph = ({ data }) => {
 
   const option = {
     title: {
-      text: "Volumes ranked by Category",
+      // text: "Volumes ranked by Category",
       left: "center",
     },
     tooltip: {
@@ -60,8 +61,9 @@ const MultipleBarGraph = ({ data }) => {
   };
 
   return (
-    <Paper sx={{ p: "10px 0 0 15px" }}>
-      <ReactECharts option={option} style={{ height: 400 }} />
+    <Paper sx={{}}>
+      <GraphTitle title={"Volumes ranked by Category"} />
+      <ReactECharts option={option} style={{ height: 350 }} />
     </Paper>
   );
 };

@@ -21,12 +21,34 @@ const PieChartComponent = ({ title, data }) => {
       bottom: 10,
       left: "center",
     },
+    // series: [
+    //   {
+    //     name: title,
+    //     type: "pie",
+    //     radius: "55%",
+    //     data,
+    //     emphasis: {
+    //       itemStyle: {
+    //         shadowBlur: 10,
+    //         shadowOffsetX: 0,
+    //         shadowColor: "rgba(0, 0, 0, 0.5)",
+    //       },
+    //     },
+    //   },
+    // ],
     series: [
       {
         name: title,
         type: "pie",
         radius: "55%",
         data,
+        label: {
+          show: true,
+          formatter: "{d}%", // Shows label name and percentage
+          position: "inside", // or 'outside' if you want labels outside the pie
+          fontSize: 12,
+          fontWeight: 700,
+        },
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
@@ -39,8 +61,25 @@ const PieChartComponent = ({ title, data }) => {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <ReactECharts option={options} style={{ height: 300, width: "100%" }} />
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "100%",
+        "& > canvas": {},
+      }}
+    >
+      <ReactECharts
+        option={options}
+        className="pie"
+        style={{
+          display: "flex",
+          alignSelf: "center",
+          height: 250,
+          width: "100%",
+        }}
+      />
     </Box>
   );
 };

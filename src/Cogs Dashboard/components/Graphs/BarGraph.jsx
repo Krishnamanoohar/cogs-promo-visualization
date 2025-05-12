@@ -1,6 +1,7 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 import { Box, Paper } from "@mui/material";
+import GraphTitle from "../../utils/GraphTitle";
 
 const CategoryLTOBarGraph = ({ data }) => {
   const categories = data?.map((item) => item.category);
@@ -8,7 +9,7 @@ const CategoryLTOBarGraph = ({ data }) => {
 
   const option = {
     title: {
-      text: "LTO Volumes Ranked by Category",
+      // text: "LTO Volumes Ranked by Category",
       left: "center",
     },
     color: [
@@ -40,7 +41,11 @@ const CategoryLTOBarGraph = ({ data }) => {
           value: ltoShipments[index],
         })),
         label: {
-          formatter: "{b}: {d}%",
+          show: true,
+          formatter: "{d}%", // Shows label name and percentage
+          position: "inside", // or 'outside' if you want labels outside the pie
+          fontSize: 12,
+          fontWeight: 700,
         },
         emphasis: {
           itemStyle: {
@@ -91,8 +96,9 @@ const CategoryLTOBarGraph = ({ data }) => {
   };
 
   return (
-    <Paper sx={{ p: "10px 0 0 15px" }}>
-      <ReactECharts option={option} style={{ height: 400, width: "100%" }} />
+    <Paper>
+      <GraphTitle title={"Volumes ranked by Category"} />
+      <ReactECharts option={option} style={{ height: 350, width: "100%" }} />
     </Paper>
   );
 };
