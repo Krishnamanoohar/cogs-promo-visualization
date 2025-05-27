@@ -125,6 +125,7 @@ const Dashboard = () => {
   const [rowSelectionModel1, setRowSelectionModel1] = useState([]);
   const [rowSelectionModel2, setRowSelectionModel2] = useState([]);
   const [rowSelectionModel3, setRowSelectionModel3] = useState([]);
+
   //
   const onChangeSearchText = (e) => {
     setSearchText(e.target.value);
@@ -344,11 +345,14 @@ const Dashboard = () => {
       const numberFormat = new Intl.NumberFormat("en-UK");
       if (rawData.length > 0) {
         let columns = [];
+
         Object.keys(rawData[0]).map((keyName, keyIndex) => {
+          console.log("Keyname", keyName === "LTO NV(GBP)", keyName);
           if (keyName !== "_id" && keyName !== "id") {
             columns.push({
               field: keyName,
               headerName: beautifyKey(keyName),
+              cellClassName: keyName === "LTO NV(GBP)" ? "dark-blue-cell" : "",
               width:
                 keyName === "brand"
                   ? 200
@@ -408,7 +412,7 @@ const Dashboard = () => {
 
   const fetchByBrand = async (brand) => {
     try {
-      await getKeyClockToken();
+      // await getKeyClockToken();
       const resp = await axios.get(
         `${
           import.meta.env.VITE_GENERIC_API
@@ -534,12 +538,27 @@ const Dashboard = () => {
         <SideMenu />
         <Box sx={{ flexGrow: 1, overflow: "auto", m: 1, p: 1 }}>
           <Stack spacing={2}>
-            <TitleContainer sx={{ display: "flex" }}>
-              <Typography variant="h3" className={styles.title}>
-                F22 Baseline Analysis
-              </Typography>
+            <TitleContainer
+              sx={{
+                display: "flex",
+                border: "2px solid rgb(2, 28, 81)",
+                p: 1,
+                borderRadius: "5px",
+                // background: "black",
+              }}
+            >
+              <h1
+                // variant="h3"
+                className={styles.title}
+                style={{
+                  m: 1,
+                  textTransform: "uppercase",
+                  // fontFamily: "Poetsen One, sans-serif"
+                }}
+              >
+                F22 - Baseline Analysis
+              </h1>
             </TitleContainer>
-
             {/* Main Content */}
             <Grid container component="main" spacing={2}>
               <Grid size={12}>
@@ -587,7 +606,7 @@ const Dashboard = () => {
           open={open}
           onClose={handleClose}
           TransitionComponent={Transition}
-          TransitionProps={{ sx: { width: "81%", justifySelf: "right" } }}
+          TransitionProps={{ sx: { width: "85%", justifySelf: "right" } }}
           hideBackdrop
         >
           <AppBar
@@ -597,7 +616,7 @@ const Dashboard = () => {
               alignItems: "center",
               position: "sticky",
               top: 0,
-              backgroundColor: "rgb(43, 46, 74)",
+              backgroundColor: "#4663ac",
             }}
           >
             <Toolbar>
@@ -610,7 +629,16 @@ const Dashboard = () => {
                 <CloseIcon />
               </IconButton>
             </Toolbar>
-            <Typography sx={{ fontSize: "2rem", fontWeight: "700" }}>
+            <Typography
+              sx={{
+                fontSize: "1.4rem",
+                fontWeight: "500",
+                fontFamily: "Poppins, sans-serif",
+                wordSpacing: "5px",
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
               Scotch - LTO SKU Analysis Dashboard
             </Typography>
           </AppBar>
@@ -660,7 +688,7 @@ const Dashboard = () => {
           open={brandDialogOpen}
           onClose={handleCloseBrandDialog}
           TransitionComponent={Transition}
-          TransitionProps={{ sx: { width: "65%", justifySelf: "right" } }}
+          TransitionProps={{ sx: { width: "69%", justifySelf: "right" } }}
           hideBackdrop
         >
           <AppBar
@@ -670,7 +698,7 @@ const Dashboard = () => {
               alignItems: "center",
               position: "sticky",
               top: 0,
-              backgroundColor: "rgb(43, 46, 74)",
+              backgroundColor: "#4663ac",
             }}
           >
             <Toolbar>
@@ -683,8 +711,17 @@ const Dashboard = () => {
                 <CloseIcon />
               </IconButton>
             </Toolbar>
-            <Typography sx={{ fontSize: "2rem", fontWeight: "700" }}>
-              Johnie Walker - LTO SKU Analysis Dashboard
+            <Typography
+              sx={{
+                fontSize: "1.4rem",
+                fontWeight: "500",
+                fontFamily: "Poppins, sans-serif",
+                wordSpacing: "5px",
+                width: "100%",
+                textAlign: "center",
+              }}
+            >
+              Johnnie Walker - LTO SKU Analysis Dashboard
             </Typography>
           </AppBar>
 

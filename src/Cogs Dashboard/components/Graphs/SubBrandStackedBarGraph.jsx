@@ -32,9 +32,10 @@ const SubBrandStackedBarGraph = ({ rawData }) => {
       },
       yAxis: {
         type: "value",
-        name: "EU Quantity",
-        nameLocation: "center",
         nameGap: 40,
+        axisLabel: {
+          color: "#000000",
+        },
       },
       xAxis: {
         type: "category",
@@ -42,6 +43,7 @@ const SubBrandStackedBarGraph = ({ rawData }) => {
         axisLabel: {
           interval: 0,
           rotate: 0,
+          color: "#000000",
         },
       },
       series: [
@@ -49,7 +51,7 @@ const SubBrandStackedBarGraph = ({ rawData }) => {
           type: "bar",
           data: chartData?.map((item) => item.quantity),
           itemStyle: {
-            color: "#92C5F9", // Custom bar color
+            color: "#4663ac", // Custom bar color
           },
         },
       ],
@@ -64,7 +66,7 @@ const SubBrandStackedBarGraph = ({ rawData }) => {
 
   return (
     <div style={{ width: "100%", height: "400px" }}>
-      <GraphTitle title={"Total 5 Scotch Brand By Volume"} />
+      <GraphTitle title={"Total 5 JW Brand By Volume"} />
       <ReactECharts option={getChartOptions()} style={{ height: "100%" }} />
     </div>
   );

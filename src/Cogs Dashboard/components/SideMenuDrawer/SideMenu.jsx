@@ -9,6 +9,7 @@ import { Typography } from "@mui/material";
 import MenuContent from "./MenuContent";
 import SelectContent from "../../utils/util-components/SelectContent";
 import CardAlert from "../../../assets/components/MUI Dashboard/dashboard-mui/components/CardAlert";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -24,26 +25,29 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+
   return (
     <Box sx={{ boxShadow: 4 }}>
       <Drawer
         variant="permanent"
         sx={{
           [`& .${drawerClasses.paper}`]: {
-            backgroundColor: "background.paper",
+            // backgroundColor: "#DADADA",
           },
         }}
       >
         <Box
           sx={{
             display: "flex",
-            mt: "calc(var(--template-frame-height, 0px) + 4px)",
-            p: 1.5,
+            // mt: "calc(var(--template-frame-height, 0px) + 4px)",
+            // p: 1.5,
+            borderRadius: "5px",
           }}
         >
           <SelectContent />
         </Box>
-        <Divider />
+        <Divider sx={{ color: "white" }} />
         <Box
           sx={{
             overflow: "auto",
@@ -52,7 +56,10 @@ export default function SideMenu() {
             flexDirection: "column",
           }}
         >
-          <MenuContent />
+          <MenuContent
+            selectedItemIndex={selectedItemIndex}
+            setSelectedItemIndex={setSelectedItemIndex}
+          />
           {/* <CardAlert /> */}
         </Box>
         <Stack

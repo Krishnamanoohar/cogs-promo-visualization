@@ -13,15 +13,12 @@ const CategoryLTOBarGraph = ({ data }) => {
       left: "center",
     },
     color: [
-      "#DDEB9D", // Blue
-      "#F5ECD5", // Orange
-      "#DFD0B8", // Red
-      "#76B7B2", // Teal
-      "#A2B9A7", // Green
-      "#A2B9A7", // Yellow
-      "#AF7AA1", // Purple
-      "#FF9DA7", // Soft Red-Pink
-      "#9C755F", // Brown
+      "rgb(92, 123, 217)",
+      "rgb(64, 178, 125)",
+      "rgb(237, 102, 102)",
+      "rgb(255, 220, 96)",
+      "rgb(112, 140, 127)",
+      "rgb(159, 224, 128)",
     ],
 
     tooltip: {
@@ -30,6 +27,10 @@ const CategoryLTOBarGraph = ({ data }) => {
     },
     legend: {
       top: "bottom",
+      textStyle: {
+        color: "#000000",
+        fontWeight: 501,
+      },
     },
     series: [
       {
@@ -97,10 +98,25 @@ const CategoryLTOBarGraph = ({ data }) => {
 
   return (
     <Paper>
-      <GraphTitle title={"Volumes ranked by Category"} />
+      <GraphTitle title={"Volumes Ranked by Category"} />
       <ReactECharts option={option} style={{ height: 350, width: "100%" }} />
     </Paper>
   );
 };
 
 export default CategoryLTOBarGraph;
+// "#ffd92f",
+// "#66c2a5",
+// "#fc8d62",
+// "#8da0cb",
+// "#e78ac3",
+// "#719437",
+
+// "#F5ECD5", // Orange
+// "#DFD0B8", // Red
+// "#76B7B2", // Teal
+// "#A2B9A7", // Green
+// "#A2B9A7", // Yellow
+// "#AF7AA1", // Purple
+// "#FF9DA7", // Soft Red-Pink
+// "#9C755F", // Brown

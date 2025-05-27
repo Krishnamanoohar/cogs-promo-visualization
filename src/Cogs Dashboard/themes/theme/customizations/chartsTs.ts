@@ -75,5 +75,5 @@
 //   },
 // };
 
-import { chartsCustomizations } from "./charts";
+import { chartsCustomizations } from "./charts.jsx";
 export default chartsCustomizations;

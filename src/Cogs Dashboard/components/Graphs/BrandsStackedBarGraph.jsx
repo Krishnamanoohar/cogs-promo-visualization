@@ -11,7 +11,7 @@ const BrandsStackedBarGraph = ({ processedData }) => {
 
   const option = {
     title: {
-      // text: "Top 5 LTO NV (GBP)",  
+      // text: "Top 5 LTO NV (GBP)",
       left: "center",
     },
     tooltip: {
@@ -29,6 +29,7 @@ const BrandsStackedBarGraph = ({ processedData }) => {
       type: "value",
       axisLabel: {
         formatter: (val) => "£" + val.toLocaleString("en-UK"),
+        color: "#000000",
       },
     },
     yAxis: {
@@ -37,6 +38,7 @@ const BrandsStackedBarGraph = ({ processedData }) => {
       axisLabel: {
         interval: 0,
         rotate: 0,
+        color: "#000000",
       },
     },
     series: [
@@ -45,7 +47,7 @@ const BrandsStackedBarGraph = ({ processedData }) => {
         type: "bar",
         data: values,
         itemStyle: {
-          color: "#92C5F9",
+          color: "#4663ac",
         },
       },
     ],
@@ -59,7 +61,11 @@ const BrandsStackedBarGraph = ({ processedData }) => {
 
   return (
     <Box sx={{ borderRadius: "10px" }}>
-      <GraphTitle title={"Top 5 Scotch Brand By NV"} />
+      <GraphTitle
+        title={"Top 5 Scotch Brand By NV"}
+        // titleBg={"rgb(2, 28, 81, 1)"}
+        titleBg={"rgb(2, 28, 81, 1)"}
+      />
       <ReactECharts option={option} style={{ height: 300, width: "100%" }} />
     </Box>
   );

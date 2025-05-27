@@ -17,8 +17,11 @@ import LTOVolBrandBarGraph from "./LTOVolBrandBarGraph";
 import GraphTitle from "../../utils/GraphTitle";
 import GraphCard from "../../utils/GraphCard";
 import SubBrandStackedBarGraph from "./SubBrandStackedBarGraph";
+import { useNavigate } from "react-router-dom";
 
 const DashboardGraphs = ({ currentTableRowData, drillDownLevel }) => {
+  const navigate = useNavigate();
+
   const parsePieData = (type) => {
     const totalBAU = currentTableRowData?.reduce(
       (sum, item) => sum + item[`BAU_${type}`],
@@ -264,6 +267,7 @@ const DashboardGraphs = ({ currentTableRowData, drillDownLevel }) => {
                 padding: "0 20px",
                 borderRadius: "20px",
               }}
+              onClick={() => navigate("/variance-analysis")}
             >
               <Typography sx={{ color: "white" }}>View Analysis</Typography>
             </Button>
@@ -293,14 +297,14 @@ const DashboardGraphs = ({ currentTableRowData, drillDownLevel }) => {
                   elevation={2}
                   sx={{ backgroundColor: "", width: "100%" }}
                 >
-                  <GraphCard title={"Total Scotch LTO SKUs"} value={673} />
+                  <GraphCard title={"Total JW LTO SKUs"} value={673} />
                 </Paper>
                 <Paper
                   elevation={2}
                   sx={{ backgroundColor: "", width: "100%" }}
                 >
                   <GraphCard
-                    title={"% Of All Scotch SKUs Produced"}
+                    title={"% Of All JW SKUs Produced"}
                     value={"31%"}
                   />
                 </Paper>
@@ -364,10 +368,7 @@ const DashboardGraphs = ({ currentTableRowData, drillDownLevel }) => {
                   elevation={2}
                   sx={{ backgroundColor: "", width: "100%" }}
                 >
-                  <GraphCard
-                    title={"% Of Total Scotch Vol Shipped"}
-                    value={"4%"}
-                  />
+                  <GraphCard title={"% Of Total JW Vol Shipped"} value={"4%"} />
                 </Paper>
               </Box>
               <Box

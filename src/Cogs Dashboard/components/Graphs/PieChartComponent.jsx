@@ -20,6 +20,10 @@ const PieChartComponent = ({ title, data }) => {
     legend: {
       bottom: 10,
       left: "center",
+      textStyle: {
+        color: "#000000",
+        fontWeight: 500,
+      },
     },
     // series: [
     //   {
@@ -46,7 +50,7 @@ const PieChartComponent = ({ title, data }) => {
           show: true,
           formatter: "{d}%", // Shows label name and percentage
           position: "inside", // or 'outside' if you want labels outside the pie
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: 700,
         },
         emphasis: {

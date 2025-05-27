@@ -12,6 +12,9 @@ import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import DevicesRoundedIcon from "@mui/icons-material/DevicesRounded";
 import SmartphoneRoundedIcon from "@mui/icons-material/SmartphoneRounded";
 import ConstructionRoundedIcon from "@mui/icons-material/ConstructionRounded";
+import { Box, Typography } from "@mui/material";
+import styles from "./SelectContent.module.css";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Avatar = styled(MuiAvatar)(({ theme }) => ({
   width: 28,
@@ -33,30 +36,11 @@ export default function SelectContent() {
     setCompany(event.target.value);
   };
 
+  const navigate = useNavigate();
+
   return (
-    <Select
-      labelId="company-select"
-      id="company-simple-select"
-      value={company}
-      onChange={handleChange}
-      displayEmpty
-      inputProps={{ "aria-label": "Select company" }}
-      fullWidth
-      sx={{
-        maxHeight: 56,
-        width: 215,
-        "&.MuiList-root": {
-          p: "8px",
-        },
-        [`& .${selectClasses.select}`]: {
-          display: "flex",
-          alignItems: "center",
-          gap: "2px",
-          pl: 1,
-        },
-      }}
-    >
-      <MenuItem value="">
+    <Box sx={{ width: "100%" }}>
+      {/* <MenuItem value="">
         <ListItemAvatar>
           <Avatar alt="Analytics Overview">
             <DevicesRoundedIcon sx={{ fontSize: "1rem" }} />
@@ -95,7 +79,29 @@ export default function SelectContent() {
           <AddRoundedIcon />
         </ListItemIcon>
         <ListItemText primary="Add New Module" secondary="Customize" />
-      </MenuItem>
-    </Select>
+      </MenuItem> */}
+      <p
+        onClick={() => navigate("/")}
+        className={styles.logo}
+        style={{
+          textAlign: "center",
+          fontSize: "48px",
+          fontFamily: "Monofett, monospace",
+          fontFamily: "Honk, system-ui",
+          fontFamily: "Vast Shadow, serif",
+          fontFamily: "Playwrite HU, cursive",
+          fontFamily: "Alfa Slab One, serif",
+          // fontFamily: `Codystar, sans-serif`,
+          color: "#021c51",
+          // fontWeight: 900,
+          letterSpacing: "4px",
+          borderRadius: "5px",
+          padding: "0.6rem 0",
+          cursor: "pointer",
+        }}
+      >
+        COGS
+      </p>
+    </Box>
   );
 }

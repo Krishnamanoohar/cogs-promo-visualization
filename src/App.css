@@ -11,3 +11,16 @@ body {
 .css-ximjwn-MuiFormLabel-root-MuiInputLabel-root.Mui-focused {
   top: -6px !important;
 }
+
+.main {
+  color: rgb(70, 99, 172);
+}
+* {
+  font-family: "Poppins", sans-serif;
+}
+
+.dark-blue-cell {
+  color: #021c51 !important;
+  color: green !important;
+  font-weight: 700;
+}

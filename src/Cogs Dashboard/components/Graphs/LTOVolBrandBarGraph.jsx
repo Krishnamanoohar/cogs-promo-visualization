@@ -48,10 +48,14 @@ const LTOVolBrandBarGraph = ({ data, drillDownLevel }) => {
       axisLabel: {
         rotate: 0,
         interval: 0,
+        color: "#000000",
       },
     },
     yAxis: {
       type: "value",
+      axisLabel: {
+        color: "#000000",
+      },
       //   name: "LTO Volume (EU)",
     },
     series: [
@@ -60,23 +64,26 @@ const LTOVolBrandBarGraph = ({ data, drillDownLevel }) => {
         type: "bar",
         data: volumes,
         itemStyle: {
-          color: "#92C5F9",
+          color: "#4663ac",
         },
       },
     ],
     grid: {
       left: "13%",
-      right: "5%",
+      right: "10%",
       top: "15%",
-      bottom: "15%",
+      bottom: "25%",
     },
   };
   console.log(processedData);
   return (
-    <Box>
-      <GraphTitle title={"Total 5 Scotch Brand By Volume"} />
-      <ReactECharts option={option} style={{ height: 300 }} />
-    </Box>
+    <div style={{ width: "100%", height: "400px" }}>
+      <GraphTitle
+        title={"Total 5 JW Brand By Volume"}
+        titleBg={"rgb(2, 28, 81, 1)"}
+      />
+      <ReactECharts option={option} style={{ height: "100%" }} />
+    </div>
   );
 };
 

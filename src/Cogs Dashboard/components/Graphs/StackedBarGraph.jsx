@@ -26,6 +26,9 @@ const StackedBarGraph = ({ data }) => {
     },
     legend: {
       bottom: 0,
+      textStyle: {
+        color: "#000000",
+      },
     },
     yAxis: {
       type: "category",
@@ -34,10 +37,14 @@ const StackedBarGraph = ({ data }) => {
         rotate: 90, // Rotate the label to make it vertical
         align: "center", // Center align the text
         verticalAlign: "middle", // Align vertically in the middle
+        color: "#000000",
       },
     },
     xAxis: {
       type: "value",
+      axisLabel: {
+        color: "#000000",
+      },
     },
     series: [
       {
@@ -65,7 +72,7 @@ const StackedBarGraph = ({ data }) => {
         variant="caption"
         display="block"
         textAlign="center"
-        sx={{ mt: 1 }}
+        sx={{ mt: 1, fontWeight: "700" }}
       >
         LTOs represent 20% of SKUs but only 4% of shipped volume.
       </Typography>

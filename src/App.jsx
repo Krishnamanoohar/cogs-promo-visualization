@@ -5,17 +5,22 @@ import HomePage from "./assets/components/HomePage/HomePage";
 import Dashboard from "./Cogs Dashboard/components/Dashboard/Dashboard";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import VarianceAnalysis from "./Cogs Dashboard/components/VarianceAnalysis/VarianceAnalysis";
+import GanttWithTable from "./Cogs Dashboard/components/OutputPage/OutputPage";
+import OpportunityPage from "./Cogs Dashboard/components/OpportunityPage/OpportunityPage";
 
 // Register all Community features
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 function App() {
+  // const []
   return (
     <>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/variance-analysis" element={<VarianceAnalysis />} />
+          <Route path="/output" element={<GanttWithTable />} />
+          <Route path="/opportunity" element={<OpportunityPage />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -80,7 +80,7 @@ export default function SideMenu() {
             Krishna Manohar
           </Typography>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-          krishna@email.com
+            krishna@email.com
           </Typography>
         </Box>
         <OptionsMenu />

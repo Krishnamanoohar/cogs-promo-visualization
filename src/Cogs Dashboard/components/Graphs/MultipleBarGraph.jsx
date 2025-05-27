@@ -2,6 +2,7 @@ import React from "react";
 import ReactECharts from "echarts-for-react";
 import { Paper } from "@mui/material";
 import GraphTitle from "../../utils/GraphTitle";
+import { color } from "echarts";
 
 const MultipleBarGraph = ({ data }) => {
   const categories = data?.map((item) => item.category);
@@ -22,6 +23,10 @@ const MultipleBarGraph = ({ data }) => {
     legend: {
       top: 30,
       data: ["Total Shipment", "BAU Shipment", "LTO Shipment"],
+      textStyle: {
+        color: "#000000",
+        // fontWeight: 6  00,
+      },
     },
     grid: {
       left: "3%",
@@ -32,10 +37,11 @@ const MultipleBarGraph = ({ data }) => {
     xAxis: {
       type: "category",
       data: categories,
-      axisLabel: { rotate: 30 },
+      axisLabel: { rotate: 30, color: "#000000" },
     },
     yAxis: {
       type: "value",
+      axisLabel: { color: "#000000" },
       // name: "Shipment (EU)",
     },
     series: [
@@ -62,7 +68,7 @@ const MultipleBarGraph = ({ data }) => {
 
   return (
     <Paper sx={{}}>
-      <GraphTitle title={"Volumes ranked by Category"} />
+      <GraphTitle title={"Volumes Ranked by Category"} />
       <ReactECharts option={option} style={{ height: 350 }} />
     </Paper>
   );

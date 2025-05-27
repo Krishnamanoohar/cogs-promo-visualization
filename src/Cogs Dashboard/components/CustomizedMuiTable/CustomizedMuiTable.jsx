@@ -15,6 +15,8 @@ const CustomizedMuiTable = ({
   const [filteredRows, setFilteredRows] = useState([]);
 
   useEffect(() => {
+    console.log(JSON.stringify(rowData));
+    console.log(JSON.stringify(columnData));
     let filtered = [...(rowData || [])];
     const { min, max } = skuFilter;
 
@@ -61,6 +63,13 @@ const CustomizedMuiTable = ({
       pageSizeOptions={[10, 20, 50]}
       density="compact"
       sx={{
+        "& .MuiDataGrid-columnHeaderTitle": {
+          fontWeight: "bold", // or 600, 700
+        },
+        "& .MuiDataGrid-columnHeaders": {
+          textAlign: "center",
+          backgroundColor: "#000099",
+        },
         "& .MuiDataGrid": {
           marginBottom: "1rem",
         },
@@ -72,10 +81,10 @@ const CustomizedMuiTable = ({
         },
         ".MuiDataGrid-row.Mui-selected": {
           color: "white",
-          backgroundColor: "rgba(25, 118, 210, 0.8)", // light blue
+          backgroundColor: "#4663ac", // light blue
         },
         "& .MuiDataGrid-row.Mui-selected:hover": {
-          backgroundColor: "rgba(25, 118, 210, 0.9)",
+          backgroundColor: "#4663ac",
         },
       }}
       slotProps={{
