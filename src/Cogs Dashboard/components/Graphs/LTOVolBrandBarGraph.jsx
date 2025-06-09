@@ -79,7 +79,7 @@ const LTOVolBrandBarGraph = ({ data, drillDownLevel }) => {
   return (
     <div style={{ width: "100%", height: "400px" }}>
       <GraphTitle
-        title={"Total 5 JW Brand By Volume"}
+        title={"Total 5 Brands By Volume"}
         titleBg={"rgb(2, 28, 81, 1)"}
       />
       <ReactECharts option={option} style={{ height: "100%" }} />

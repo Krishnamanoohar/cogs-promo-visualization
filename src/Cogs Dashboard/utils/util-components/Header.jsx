@@ -128,7 +128,7 @@ export default function Header({
               sx={{ minWidth: "fit-content" }}
               onClick={() => toggleSort("sumOfEU_Quantity")}
             >
-              Sort Sum Of EU Quantity
+              Sort By Quantity
             </Button>
             <Button
               variant="outlined"
@@ -143,7 +143,7 @@ export default function Header({
               sx={{ minWidth: "fit-content" }}
               onClick={() => toggleSort("sumOf GBP NSV")}
             >
-              Sort Sum Of GBP NSV
+              Sort By Value
             </Button>
           </>
         )}

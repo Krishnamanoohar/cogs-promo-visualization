@@ -62,7 +62,7 @@ const BrandsStackedBarGraph = ({ processedData }) => {
   return (
     <Box sx={{ borderRadius: "10px" }}>
       <GraphTitle
-        title={"Top 5 Scotch Brand By NV"}
+        title={"Top 5 Scotch Brand By Value"}
         // titleBg={"rgb(2, 28, 81, 1)"}
         titleBg={"rgb(2, 28, 81, 1)"}
       />

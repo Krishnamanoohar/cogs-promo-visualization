@@ -66,7 +66,7 @@ const SubBrandStackedBarGraph = ({ rawData }) => {
 
   return (
     <div style={{ width: "100%", height: "400px" }}>
-      <GraphTitle title={"Total 5 JW Brand By Volume"} />
+      <GraphTitle title={"Total 5 JW Brand By Value"} />
       <ReactECharts option={getChartOptions()} style={{ height: "100%" }} />
     </div>
   );

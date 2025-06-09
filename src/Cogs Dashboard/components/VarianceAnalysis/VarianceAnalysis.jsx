@@ -7,6 +7,7 @@ import { dataGridCustomizations } from "../../themes/theme/customizations/dataGr
 import { treeViewCustomizations } from "../../themes/theme/customizations/treeView.jsx";
 import { DataGrid } from "@mui/x-data-grid";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { TitleContainer } from "../OpportunityPage/OpportunityPage.jsx";
 
 const VarianceAnalysis = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -140,18 +141,21 @@ const VarianceAnalysis = () => {
             alignItems: "center",
           }}
         >
-          <Typography
+          <TitleContainer
             variant="h3"
             sx={{
-              m: 3,
+              p: 1,
+              m: 2,
               fontWeight: 600,
               fontFamily: "Poppins, sans-serif",
               textTransform: "uppercase",
               letterSpacing: "1px",
+              width: "97%",
+              fontSize: "28px",
             }}
           >
             Variance Analysis
-          </Typography>
+          </TitleContainer>
 
           {/* Left Side DataGrid */}
           <Box
@@ -217,17 +221,22 @@ const VarianceAnalysis = () => {
                 flex: 1,
               }}
             >
-              <Typography
-                variant="h6"
-                gutterBottom
-                sx={{
-                  fontSize: "24px",
-                  fontFamily: "Poppins, sans-serif",
-                  textAlign: "center",
-                }}
-              >
-                Details for {selectedRow.category}
-              </Typography>
+              <Box display={"flex"} justifyContent={"center"}>
+                <Typography
+                  variant="h6"
+                  gutterBottom
+                  sx={{
+                    fontSize: "24px",
+                    fontFamily: "Poppins, sans-serif",
+                    textAlign: "center",
+                    width: "min-content",
+                    textWrap: "nowrap",
+                    borderBottom: "2px solid",
+                  }}
+                >
+                  Details for {selectedRow.category}
+                </Typography>
+              </Box>
               <DataGrid
                 disableColumnFilter
                 disableColumnSelector

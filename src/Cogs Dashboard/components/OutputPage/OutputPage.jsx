@@ -4,6 +4,7 @@ import ReactECharts from "echarts-for-react";
 import {
   Box,
   CssBaseline,
+  Dialog,
   FormControl,
   InputLabel,
   MenuItem,
@@ -16,6 +17,14 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Slide,
+  DialogContent,
+  IconButton,
+  Stack,
+  Button,
+  DialogTitle,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import AppTheme from "../../themes/shared-theme/AppTheme";
 import { chartsCustomizations } from "../../themes/theme/customizations/charts.jsx";
@@ -26,46 +35,21 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import SideMenu from "../SideMenuDrawer/SideMenu";
 import GraphTitle from "../../utils/GraphTitle";
 import { color } from "echarts";
+import CloseIcon from "@mui/icons-material/Close";
+import LightbulbIcon from "@mui/icons-material/Lightbulb";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import InsightPopupCard from "../InsightPopupCard/InsightPopupCard.jsx";
+import { TitleContainer } from "../OpportunityPage/OpportunityPage.jsx";
 
 const GanttEchartsWithTable = () => {
+  const [showInsights, setShowInsights] = useState(false);
+  const [insightType, setInsightType] = useState(null);
+
   const xThemeComponents = {
     ...chartsCustomizations,
     ...dataGridCustomizations,
     ...treeViewCustomizations,
   };
-
-  // Gantt-style data
-  const ganttData = [
-    { task: "Design", start: "2024-05-01", end: "2024-05-05" },
-    { task: "Development", start: "2024-05-06", end: "2024-05-15" },
-    { task: "Testing", start: "2024-05-16", end: "2024-05-20" },
-    { task: "Deployment", start: "2024-05-21", end: "2024-05-23" },
-  ];
-
-  // Convert to timestamp range for ECharts
-  const seriesData = ganttData.map((item, index) => ({
-    name: item.task,
-    value: [
-      index,
-      new Date(item.start).getTime(),
-      new Date(item.end).getTime(),
-    ],
-    itemStyle: {
-      color: "#1976d2",
-    },
-  }));
-
-  // MUI DataGrid setup
-  const rows = ganttData.map((item, i) => ({
-    id: i,
-    ...item,
-  }));
-
-  const columns = [
-    { field: "task", headerName: "Task", flex: 1 },
-    { field: "start", headerName: "Start Date", flex: 1 },
-    { field: "end", headerName: "End Date", flex: 1 },
-  ];
 
   const months = [
     "Mar",
@@ -218,123 +202,6 @@ const GanttEchartsWithTable = () => {
     });
   });
 
-  // const ganttOption = {
-  //   tooltip: {
-  //     formatter: (params) => {
-  //       const start = new Date(params.value[1]).toLocaleDateString();
-  //       const end = new Date(params.value[2]).toLocaleDateString();
-  //       return `<strong>${params.name}</strong><br/>Start: ${start}<br/>End: ${end}`;
-  //     },
-  //   },
-  //   title: {
-  //     left: "center",
-  //   },
-  //   grid: {
-  //     containLabel: true,
-  //     left: "5%",
-  //   },
-  //   xAxis: {
-  //     type: "time",
-  //     name: "Date",
-  //     nameLocation: "middle",
-  //     nameGap: 30,
-  //     axisLabel: {
-  //       color: "#000000",
-  //     },
-  //   },
-  //   yAxis: {
-  //     type: "category",
-  //     data: [...new Set(expandedGanttData.map((d) => d.name))], // unique task names
-  //     axisLabel: {
-  //       color: "#000000",
-  //     },
-  //   },
-  //   series: [
-  //     {
-  //       type: "custom",
-  //       renderItem: function (params, api) {
-  //         const categoryIndex = api.value(0);
-  //         const start = api.coord([api.value(1), categoryIndex]);
-  //         const end = api.coord([api.value(2), categoryIndex]);
-  //         const height = 20;
-
-  //         return {
-  //           type: "rect",
-  //           shape: {
-  //             x: start[0],
-  //             y: start[1] - height / 2,
-  //             width: end[0] - start[0],
-  //             height: height,
-  //           },
-  //           style: api.style(),
-  //         };
-  //       },
-  //       encode: {
-  //         x: [1, 2],
-  //         y: 0,
-  //       },
-  //       data: expandedGanttData,
-  //     },
-  //   ],
-  // };
-
-  const getDateRangeForMonth = (monthLabel, index) => {
-    const monthMap = {
-      Jan: 0,
-      Feb: 1,
-      Mar: 2,
-      Apr: 3,
-      May: 4,
-      Jun: 5,
-      Jul: 6,
-      Aug: 7,
-      Sep: 8,
-      Oct: 9,
-      Nov: 10,
-      Dec: 11,
-    };
-    const baseYear = 2024;
-    const year = index < 12 ? baseYear : baseYear + 1;
-    const month = monthMap[monthLabel];
-    const start = new Date(year, month, 1);
-    const end = new Date(year, month, 7); // each task spans 7 days
-    return [start.getTime(), end.getTime()];
-  };
-
-  const periodMap = {
-    P1: 1,
-    P2: 2,
-    P3: 3,
-    P4: 4,
-    P5: 5,
-    P6: 6,
-    P7: 7,
-    P8: 8,
-    P9: 9,
-    P10: 10,
-    P11: 11,
-    P12: 12,
-  };
-
-  const ganttTasks = [
-    {
-      name: "SKU Production (DSL)",
-      value: [0, periodMap.P1, periodMap.P4],
-    },
-    {
-      name: "Market Orders",
-      value: [1, periodMap.P1, periodMap.P3],
-    },
-    {
-      name: "DBBV shipments to Mkt",
-      value: [2, periodMap.P3, periodMap.P6],
-    },
-    {
-      name: "Activation Period (G5)",
-      value: [3, periodMap.P4, periodMap.P6],
-    },
-  ];
-
   const dataMap = {
     India: [
       { name: "SKU Production (DSL)", value: [0, 1, 4] },
@@ -350,6 +217,44 @@ const GanttEchartsWithTable = () => {
     ],
   };
 
+  const insightsData = {
+    India: {
+      observations: {
+        title: "Key Observations",
+        content: [
+          "62% of total order vol was requested by market for delivery in Nov’21 with less than 4 weeks left in campaign activation period deadline",
+          "Gate 5 for Gifting 2022 campaign does not specify a campaign activation period. Presumed to be O-N-D F22",
+        ],
+      },
+      recommendations: {
+        title: "Key Recommendations",
+        content: [
+          "G5 template should be standardised to include:\n− Campaign activation dates\n− Structured phasing plan for orders & deliveries between supply and commercial",
+          "Continuous governance between Supply & Commercial to ensure market orders and delivery dates are aligned with campaign activation dates",
+          "G5 should define the specific campaign success criteria applicable within the campaign’s activation period",
+        ],
+      },
+    },
+
+    Brazil: {
+      observations: {
+        title: "Key Observations",
+        content: [
+          "For Icons 2.0 the campaign activation period was F22 S-O-N-D, however deliveries by Brazil were requested starting Oct’21. Hence, campaign sales period was limited to Nov-Dec’21",
+          "Icons 2.0 G5 is not aligned on the activation period and the TOP e.g. in the case of this SKU the G5 TOP end date is Nov’21 and sale end date is Jan’22",
+        ],
+      },
+      recommendations: {
+        title: "Key Recommendations",
+        content: [
+          "G5 template should be standardised to include:\n− Campaign activation dates\n− Structured phasing plan for orders & deliveries between supply and commercial",
+          "Continuous governance between Supply & Commercial to ensure market orders and delivery dates are aligned with campaign activation dates",
+          "G5 should define the specific campaign success criteria applicable within the campaign’s activation period",
+        ],
+      },
+    },
+  };
+
   const [countryData, setCountryData] = useState("India");
   const [ganttDataState, setGanttDataState] = useState(dataMap["India"]);
 
@@ -359,38 +264,31 @@ const GanttEchartsWithTable = () => {
     setGanttDataState(dataMap[selected]);
   };
 
-  // tableRows.forEach((row, rowIndex) => {
-  //   row.data.forEach((value, i) => {
-  //     if (value !== null && value !== undefined && value !== "") {
-  //       const [start, end] = getDateRangeForMonth(months[i], i);
-  //       ganttTasks.push({
-  //         name: row.label,
-  //         value: [row.label, start, end],
-  //         itemStyle: {
-  //           color: `hsl(${(rowIndex * 40) % 360}, 70%, 60%)`,
-  //         },
-  //       });
-  //     }
-  //   });
-  // });
+  const handleInsightPopup = (insight) => {
+    setShowInsights(true);
+    setInsightType(insight);
+  };
+
+  const handleCloseInsightPopup = () => {
+    setShowInsights(false);
+  };
 
   const ganttOption = {
     tooltip: {
       formatter: (params) => {
-        const start = new Date(params.value[1]).toLocaleDateString();
-        const end = new Date(params.value[2]).toLocaleDateString();
+        const start = `P${params.value[1]}`;
+        const end = `P${params.value[2]}`;
         return `<strong>${params.name}</strong><br/>Start: ${start}<br/>End: ${end}`;
       },
     },
     title: {
-      text: "SKU Lifecycle Gantt Chart",
       left: "center",
     },
     grid: {
       left: "25%",
       right: "10%",
       top: 60,
-      bottom: 50,
+      bottom: 80,
     },
     xAxis: {
       type: "value",
@@ -399,7 +297,7 @@ const GanttEchartsWithTable = () => {
       max: 12,
       interval: 1,
       axisLabel: {
-        formatter: (val) => `P${val}`, // Display P1...P12
+        formatter: (val) => `P${val}`,
         color: "#000",
       },
     },
@@ -416,7 +314,6 @@ const GanttEchartsWithTable = () => {
         fontWeight: "bold",
       },
     },
-
     series: [
       {
         type: "custom",
@@ -434,9 +331,24 @@ const GanttEchartsWithTable = () => {
               width: end[0] - start[0],
               height: height,
             },
-            style: api.style(),
+            style: {
+              fill: {
+                type: "linear",
+                x: 0,
+                y: 0,
+                x2: 1,
+                y2: 0,
+                colorStops: [
+                  { offset: 0, color: "#2C7A7B" },
+                  { offset: 0.7, color: "#2C7A7B" },
+                  { offset: 0.7, color: "#D1495B" },
+                  { offset: 1, color: "#D1495B" },
+                ],
+              },
+            },
           };
         },
+
         encode: {
           x: [1, 2],
           y: 0,
@@ -446,71 +358,146 @@ const GanttEchartsWithTable = () => {
     ],
   };
 
-  console.log(expandedGanttData);
+  const LegendItem = ({ color, label }) => (
+    <Box display="flex" alignItems="center" gap={1}>
+      <Box width={26} height={16} bgcolor={color} borderRadius={0.3} />
+      <Typography variant="body2">{label}</Typography>
+    </Box>
+  );
 
   return (
     <AppTheme themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: "flex" }}>
         <SideMenu />
-        <Box sx={{ width: "85.7%" }} p={3}>
-          <Typography
-            variant="h3"
+        <Box sx={{ width: "85.7%" }} p={2}>
+          <Paper
+            elevation={4}
             sx={{
-              m: 1,
+              p: 2,
+              m: 0,
+              textAlign: "center",
               fontWeight: 600,
               fontFamily: "Poppins, sans-serif",
               textTransform: "uppercase",
               letterSpacing: "1px",
-              textAlign: "center",
+              width: "99%",
+              fontSize: "28px",
             }}
           >
             Output
-          </Typography>
+          </Paper>
 
-          <FormControl
+          <Box
             sx={{
-              width: "14rem",
               display: "flex",
-              justifySelf: "right",
-              margin: "1rem 0",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <InputLabel id="country-select-label">Country</InputLabel>
-            <Select
-              labelId="country-select-label"
-              id="country-select"
-              value={countryData}
-              label="Country"
-              onChange={handleChange}
+            <Stack direction="row" spacing={2}>
+              <Button
+                variant="outlined"
+                startIcon={<LightbulbIcon />}
+                onClick={() => handleInsightPopup("recommendations")}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 500,
+                  fontSize: "0.95rem",
+                  padding: "0.5rem 1.4rem",
+                  borderRadius: "10px",
+                  color: "#1E88E5",
+                  borderColor: "#1E88E5",
+                  "&:hover": {
+                    backgroundColor: "#E3F2FD",
+                    borderColor: "#1565C0",
+                  },
+                }}
+              >
+                Recommendation
+              </Button>
+              <Button
+                variant="outlined"
+                startIcon={<VisibilityIcon />}
+                sx={{
+                  textTransform: "none",
+                  fontWeight: 500,
+                  fontSize: "0.95rem",
+                  padding: "0.5rem 1.4rem",
+                  borderRadius: "10px",
+                  color: "#6D4C41",
+                  borderColor: "#6D4C41",
+                  "&:hover": {
+                    backgroundColor: "#EFEBE9",
+                    borderColor: "#5D4037",
+                  },
+                }}
+                onClick={() => handleInsightPopup("observations")}
+              >
+                Observation
+              </Button>
+            </Stack>
+            <FormControl
+              sx={{
+                width: "14rem",
+                display: "flex",
+                justifySelf: "right",
+                margin: "1rem 0",
+              }}
             >
-              <MenuItem value="India">India</MenuItem>
-              <MenuItem value="Brazil">Brazil</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Box boxShadow={4}>
-            <GraphTitle title={"Project Timeline (Gantt Chart)"} />
-            <ReactECharts option={ganttOption} style={{ height: 400 }} />
+              <InputLabel id="country-select-label">Country</InputLabel>
+              <Select
+                labelId="country-select-label"
+                id="country-select"
+                F
+                value={countryData}
+                label="Country"
+                onChange={handleChange}
+              >
+                <MenuItem value="India">India</MenuItem>
+                <MenuItem value="Brazil">Brazil</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
 
-          <Typography
-            variant="h6"
-            mt={4}
-            mb={1}
-            sx={{
-              fontSize: "24px",
-              textAlign: "center",
-              fontFamily: "Poppins, serif",
-            }}
+          <Box boxShadow={4}>
+            <GraphTitle title={"SKU Lifecycle Gantt Chart"} />
+            <ReactECharts option={ganttOption} style={{ height: 400 }} />
+
+            <Box display="flex" gap={3} justifyContent="right" p={2}>
+              <LegendItem color="#2C7A7B" label="Planned" />
+              <LegendItem color="#D1495B" label="Extended" />
+            </Box>
+          </Box>
+
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+            sx={{ textWrap: "nowrap" }}
           >
-            Task Details
-          </Typography>
+            <Typography
+              variant="h6"
+              mt={4}
+              mb={2}
+              sx={{
+                fontSize: "24px",
+                textAlign: "center",
+                fontFamily: "Poppins, serif",
+                borderBottom: "2px solid #0b0e14",
+                width: "min-content",
+              }}
+            >
+              Task Details
+            </Typography>
+          </Box>
           <Box boxShadow={4} sx={{ borderRadius: "10px", p: 2 }}>
             <TableContainer>
-              <Typography variant="h6" align="center" sx={{ py: 2 }}>
-                SKU 768171 F21 Lifecycle Overview
-              </Typography>
+              <Paper>
+                <Typography variant="h6" align="center" sx={{ py: 2 }}>
+                  SKU 768171 F21 Lifecycle Overview
+                </Typography>
+              </Paper>
               <Table
                 size="small"
                 sx={{
@@ -752,44 +739,14 @@ const GanttEchartsWithTable = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            {/* <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                autoPageSize
-                disableRowSelectionOnClick
-                sx={{
-                  height: "100%",
-                  "& .MuiDataGrid-cell:focus": {
-                    outline: "none",
-                  },
-                  "& .MuiDataGrid-columnHeader": { cursor: "pointer" },
-                  "& .MuiDataGrid-cell": {
-                    fontWeight: "600",
-                    cursor: "pointer",
-                    backgroundColor: "#d9d9d9",
-                    border: "1px solid black",
-                    borderRadius: "5px",
-                  },
-                  "& .MuiDataGrid-columnHeader": {
-                    backgroundColor: "#1e4e74",
-                    color: "white",
-                  },
-                  "& .MuiDataGrid-menuIconButton": {
-                    color: "white",
-                  },
-                  "& .MuiDataGrid-filler": {
-                    display: "#d9d9d9",
-                  },
-                  "& .css-1tdeh38": {
-                    borderTop: "none",
-                    background: "#d9d9d9",
-                  },
-                  "& .MuiDataGrid-columnHeaders": {
-                    fontSize: "16px", // Set your desired font size here
-                  },
-                }}
-              /> */}
+
+            <Dialog open={showInsights} sx={{ ml: "10%" }}>
+              <InsightPopupCard
+                insightData={insightsData[countryData][insightType]}
+                onClosePopup={handleCloseInsightPopup}
+                insightType={insightType}
+              />
+            </Dialog>
           </Box>
         </Box>
       </Box>
@@ -798,3 +755,115 @@ const GanttEchartsWithTable = () => {
 };
 
 export default GanttEchartsWithTable;
+
+// const columns = [
+//   { field: "task", headerName: "Task", flex: 1 },
+//   { field: "start", headerName: "Start Date", flex: 1 },
+//   { field: "end", headerName: "End Date", flex: 1 },
+// ];
+
+// Convert to timestamp range for ECharts
+// const seriesData = ganttData.map((item, index) => ({
+//   name: item.task,
+//   value: [index, new Date(item.start).getTime(), new Date(item.end).getTime()],
+//   itemStyle: {
+//     color: "#1976d2",
+//   },
+// }));
+
+// MUI DataGrid setup
+// const rows = ganttData.map((item, i) => ({
+//   id: i,
+//   ...item,
+// }));
+
+// const getDateRangeForMonth = (monthLabel, index) => {
+//   const monthMap = {
+//     Jan: 0,
+//     Feb: 1,
+//     Mar: 2,
+//     Apr: 3,
+//     May: 4,
+//     Jun: 5,
+//     Jul: 6,
+//     Aug: 7,
+//     Sep: 8,
+//     Oct: 9,
+//     Nov: 10,
+//     Dec: 11,
+//   };
+//   const baseYear = 2024;
+//   const year = index < 12 ? baseYear : baseYear + 1;
+//   const month = monthMap[monthLabel];
+//   const start = new Date(year, month, 1);
+//   const end = new Date(year, month, 7); // each task spans 7 days
+//   return [start.getTime(), end.getTime()];
+// };
+
+// Gantt-style data
+// const ganttData = [
+//   { task: "Design", start: "2024-05-01", end: "2024-05-05" },
+//   { task: "Development", start: "2024-05-06", end: "2024-05-15" },
+//   { task: "Testing", start: "2024-05-16", end: "2024-05-20" },
+//   { task: "Deployment", start: "2024-05-21", end: "2024-05-23" },
+// ];
+
+// const ganttTasks = [
+//   {
+//     name: "SKU Production (DSL)",
+//     value: [0, periodMap.P1, periodMap.P4],
+//   },
+//   {
+//     name: "Market Orders",
+//     value: [1, periodMap.P1, periodMap.P3],
+//   },
+//   {
+//     name: "DBBV shipments to Mkt",
+//     value: [2, periodMap.P3, periodMap.P6],
+//   },
+//   {
+//     name: "Activation Period (G5)",
+//     value: [3, periodMap.P4, periodMap.P6],
+//   },
+// ];
+
+// const periodMap = {
+//   P1: 1,
+//   P2: 2,
+//   P3: 3,
+//   P4: 4,
+//   P5: 5,
+//   P6: 6,
+//   P7: 7,
+//   P8: 8,
+//   P9: 9,
+//   P10: 10,
+//   P11: 11,
+//   P12: 12,
+// };
+
+// const commonStyle = {
+//   textTransform: "none",
+//   fontWeight: 500,
+//   fontSize: "0.95rem",
+//   padding: "0.5rem 1.4rem",
+//   borderRadius: "12px",
+//   transition: "background 0.3s ease, box-shadow 0.3s ease",
+//   boxShadow: "none",
+//   borderWidth: 1.5,
+// };
+
+// tableRows.forEach((row, rowIndex) => {
+//   row.data.forEach((value, i) => {
+//     if (value !== null && value !== undefined && value !== "") {
+//       const [start, end] = getDateRangeForMonth(months[i], i);
+//       ganttTasks.push({
+//         name: row.label,
+//         value: [row.label, start, end],
+//         itemStyle: {
+//           color: `hsl(${(rowIndex * 40) % 360}, 70%, 60%)`,
+//         },
+//       });
+//     }
+//   });
+// });

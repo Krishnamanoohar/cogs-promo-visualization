@@ -24,6 +24,7 @@
     "echarts-for-react": "^3.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-draggable": "^4.4.6",
     "react-router-dom": "^6.30.0"
   },
   "devDependencies": {
