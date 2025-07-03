@@ -22,16 +22,16 @@ const VarianceAnalysis = () => {
     {
       id: "68107241a017fcb3809e151c",
       category: "Qty (Cases)",
-      actual: 100,
+      actual: 140,
       planned: 120,
-      difference: "£20",
+      difference: "- £20",
     },
     {
       id: "68107241a017fcb3809e151d",
       category: "COGS (GBP)",
       actual: 90,
       planned: 95,
-      difference: "£5",
+      difference: "+ £5",
     },
   ];
 
